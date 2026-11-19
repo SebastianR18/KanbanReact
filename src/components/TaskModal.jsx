@@ -21,6 +21,10 @@ export default function TaskModal({ task, defaultStatus, onSave, onClose }) {
   function handleSubmit(e) {
     e.preventDefault();
     const title = form.title.trim();
+    if (!title) {
+      setError('El título es obligatorio.');
+      return;
+    }
     onSave({ ...form, title, description: form.description.trim() });
   }
 
