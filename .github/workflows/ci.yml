@@ -1,0 +1,38 @@
+# Nombre que verás en la pestaña "Actions" de GitHub
+name: CI
+
+# Cuándo se ejecuta: en cada push y en cada pull request hacia main
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    # Máquina virtual que GitHub presta para correr el pipeline
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descarga el código del repositorio en la máquina
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      # 2. Instala Node.js y guarda en caché las dependencias de npm
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # 3. Instala las dependencias exactas de package-lock.json
+      - name: Instalar dependencias
+        run: npm ci
+
+      # 4. Ejecuta las pruebas con Vitest (si una falla, el pipeline se detiene)
+      - name: Ejecutar pruebas
+        run: npm test
+
+      # 5. Genera el build de producción en la carpeta dist/
+      - name: Build de producción
+        run: npm run build
