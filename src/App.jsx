@@ -42,6 +42,8 @@ export default function App() {
   const [tasks, setTasks] = useState(loadTasks);
   // null = modal cerrado; { task } = editar; { status } = crear en esa columna
   const [modal, setModal] = useState(null);
+  const [search, setSearch] = useState('');
+  const query = search.trim().toLowerCase();
 
   useEffect(() => {
     try {
@@ -75,6 +77,14 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <h1>Tablero Kanban</h1>
+        <input
+          className="search"
+          type="search"
+          placeholder="Buscar tareas..."
+          aria-label="Buscar tareas"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <button className="btn btn-primary" onClick={() => setModal({ status: 'pendiente' })}>
           + Nueva tarea
         </button>
@@ -85,7 +95,9 @@ export default function App() {
           <Column
             key={status.id}
             status={status}
-            tasks={tasks.filter((t) => t.status === status.id)}
+            tasks={tasks.filter(
+              (t) => t.status === status.id && t.title.toLowerCase().includes(query)
+            )}
             onAdd={() => setModal({ status: status.id })}
             onEdit={(task) => setModal({ task })}
             onDelete={deleteTask}
