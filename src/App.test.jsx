@@ -77,4 +77,14 @@ describe('Tablero Kanban', () => {
     expect(window.confirm).toHaveBeenCalled();
     expect(screen.queryByText('Escribir documentación')).not.toBeInTheDocument();
   });
+
+  it('filtra las tareas por el texto de búsqueda', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.type(screen.getByPlaceholderText('Buscar tareas...'), 'CRUD');
+
+    expect(screen.getByText('Implementar CRUD de tareas')).toBeInTheDocument();
+    expect(screen.queryByText('Escribir documentación')).not.toBeInTheDocument();
+  });
 });
